@@ -24,8 +24,8 @@ class ABTests(TestCase):
         # Careful here, response.template doesn't know where we are.
     
         # It always looks like we loaded the original.
-        response = self.client.get("/test/")        
-        self.assertTrue(response.template.name, "original.html")
+        response = self.client.get("/test/")
+        self.assertTemplateUsed(response, "original.html")
 
         # But we really just loaded one of the tests (template_name is the response content)
         test = Test.objects.get(template_name=response.content)

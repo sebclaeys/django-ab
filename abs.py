@@ -1,5 +1,6 @@
 from django.template import TemplateDoesNotExist
 from ab.models import Experiment, Test
+import ab.signals as signals
 
 
 # @@@ The interface to this is shazbot. Rethink is in order.
@@ -71,6 +72,7 @@ class AB(object):
         # Record this hit.
         test.hits = test.hits + 1
         test.save()
+        signals.experiment_impression.send(sender=self.__class__, request=self.request, test=test)
 
         # Activate this experiment/test on the request.
         self.request.session[key] = {"id": test.id, "template": test.template_name}
@@ -85,6 +87,7 @@ class AB(object):
         test = Test.objects.get(pk=test_id)
         test.conversions = test.conversions + 1
         test.save()
+        signals.experiment_converted.send(sender=self.__class__, request=self.request, test=test)
         
         self.request.session[key]["converted"] = 1
         self.request.session.modified = True
