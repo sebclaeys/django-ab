@@ -11,8 +11,9 @@ experiment_converted = dispatcher.Signal(providing_args=["request", "test"])
 @receiver(experiment_impression)
 def on_experiment_impression(sender, **kwargs):
     task_queue.track_event.delay(kwargs['request'].user.id,
-                                 kwargs['test'].experiment.name,
-                                 {'type': 'impression',
+                                 'AB Testing',
+                                 {'name': kwargs['test'].experiment.name,
+                                  'type': 'impression',
                                   'template': kwargs['test'].template_name
                                  }
     )
@@ -20,7 +21,8 @@ def on_experiment_impression(sender, **kwargs):
 @receiver(experiment_converted)
 def on_experiment_converted(sender, **kwargs):
     task_queue.track_event.delay(kwargs['request'].user.id,
-                                 kwargs['test'].experiment.name,
-                                 {'type': 'conversion',
+                                 'AB Testing',
+                                 {'name': kwargs['test'].experiment.name,
+                                  'type': 'conversion',
                                   'template': kwargs['test'].template_name}
     )
