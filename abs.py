@@ -34,10 +34,15 @@ class AB(object):
         """True if this Experiment has been converted."""
         return "converted" in self.request.session[self.get_experiment_key(exp)]
     
-    def get_test(self, exp):
+    def get_test(self, exp, idx=None):
         """Returns a random Test for this Experiment"""
         tests = exp.test_set.all()
-        return tests[self.request.session.session_key.__hash__() % len(tests)]
+        if not idx:
+            idx = self.request.session.session_key.__hash__() % len(tests)
+        else:
+            # if index is provided, return this specific experiemnt
+            idx = idx % len(tests)
+        return tests[idx]
 
     def get_experiment_key(self, exp):
         return "ab_exp_%s" % exp.name
@@ -47,7 +52,14 @@ class AB(object):
             return Experiment.objects.get(template_name=template_name)
         except Experiment.DoesNotExist:
             raise TemplateDoesNotExist, template_name
-        
+
+
+    def get_by_idx(self, template_name, idx):
+        exp = self.get_experiment(template_name)
+        test = self.get_test(exp, idx)
+        return test.template_name
+
+
     def run(self, template_name):
         """
         Searches for an Experiment running on template_name. If none are found

@@ -9,12 +9,16 @@ This Fork
   * Fires django signals on impression and conversion
   * Send async events to mixpanel (requires django-celery and django-mixpanel)
   * Detect bots and only activate an experiment for real human
+  * Force display of specific template with url param ?exp="test index" (?exp=1)
 
 Requirements
 ============
 
-pip install pyyaml ua-parser user-agents
-pip install django-user-agents
+celery==3.1.10
+mixpanel-py==3.1.2
+ua-parser==0.3.5
+user-agents==0.3.0
+django-user-agents==0.3.0
 
 
 Usage
@@ -87,3 +91,8 @@ Advanced
             
             return render_to_response(template_name)
     
+
+  2. Force loading of specific template:
+
+    -  To load template number 1: http://website.com/abtest/?exp=0
+    -  To load template number 2: http://website.com/abtest/?exp=1
