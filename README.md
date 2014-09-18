@@ -8,17 +8,26 @@ This Fork
   * Compatible with Django 1.6
   * Fires django signals on impression and conversion
   * Send async events to mixpanel (requires django-celery and django-mixpanel)
+  * Detect bots and only activate an experiment for real human
 
+Requirements
+============
+
+pip install pyyaml ua-parser user-agents
+pip install django-user-agents
 
 
 Usage
 =====
+
+
 
  1. Update your `settings.py`:
 
         # Add `ab` to `INSTALLED_APPS`
         INSTALLED_APPS = (
             ...
+            'django_user_agents',
             'ab',
             )
             
@@ -27,6 +36,7 @@ Usage
             'django.middleware.common.CommonMiddleware',
             'django.contrib.sessions.middleware.SessionMiddleware',
             ...
+            'django_user_agents.middleware.UserAgentMiddleware', # /!\ Required middleware
             'ab.middleware.ABMiddleware',
         )
 

@@ -7,7 +7,8 @@ class ABLoader(Loader):
     def load_template_source(self, template_name, template_dirs=None):
         request = get_current_request()
 
-        if not request:
+        ## Detecting bots - requires django-user-agent
+        if not request or request.user_agent.is_bot:
             test_template_name = template_name
         else:
             test_template_name = request.ab.run(template_name)
