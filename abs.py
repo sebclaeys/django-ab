@@ -37,7 +37,7 @@ class AB(object):
     def get_test(self, exp, idx=None):
         """Returns a random Test for this Experiment"""
         tests = exp.test_set.all()
-        if not idx:
+        if idx is None:
             idx = self.request.session.session_key.__hash__() % len(tests)
         else:
             # if index is provided, return this specific experiemnt
