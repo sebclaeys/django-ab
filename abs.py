@@ -38,10 +38,16 @@ class AB(object):
         """Returns a random Test for this Experiment"""
         tests = exp.test_set.all()
         if idx is None:
-            idx = self.request.session.session_key.__hash__() % len(tests)
+            if 'idx' in self.request.session:
+                idx = self.request.session['idx']
+            else:
+                import random
+                idx = random.randint(0, len(tests) - 1)
+                self.request.session['idx'] = idx
+                self.request.session.modified = True
         else:
             # if index is provided, return this specific experiemnt
-            idx = idx % len(tests)
+            idx = idx
         return tests[idx]
 
     def get_experiment_key(self, exp):
