@@ -8,16 +8,12 @@ class ABLoader(Loader):
         request = get_current_request()
         test_template_name = template_name
 
-        if request:
-            if request.user_agent.is_bot:
-                print 'is a bot'
-
+        if request and not request.user_agent.is_bot:
+            if 'exp' in request.GET:
+                # If exp is provided, the experiment is not activated but the specific temnpalte is loaded
+                test_template_name = request.ab.get_by_idx(template_name, int(request.GET['exp']))
             else:
-                if 'exp' in request.GET:
-                    # If exp is provided, the experiment is not activated but the specific temnpalte is loaded
-                    test_template_name = request.ab.get_by_idx(template_name, int(request.GET['exp']))
-                else:
-                    test_template_name = request.ab.run(template_name)
+                test_template_name = request.ab.run(template_name)
 
         return super(ABLoader, self).load_template_source(test_template_name, template_dirs=template_dirs)
 

@@ -11,7 +11,6 @@ def get_current_request():
 class ABMiddleware(object):
     def process_request(self, request):
 
-        print "Storing request to thread locals"
         _thread_locals.request = request
 
 
